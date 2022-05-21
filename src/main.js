@@ -27,6 +27,7 @@ const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = format.smoothing;
 var metadataList = [];
 var attributesList = [];
+var testArray = [];
 var dnaList = new Set();
 const DNA_DELIMITER = "-";
 const HashlipsGiffer = require(`${basePath}/modules/HashlipsGiffer.js`);
@@ -279,8 +280,66 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
   return !_DnaList.has(_filteredDNA);
 };
 
+function RandomNumber(min, max, exclusions) {
+  var exclusionsSorted = exclusions.concat().sort(function(a, b) {
+    return a - b
+  });
+  var logicalMax = max - exclusionsSorted.length;
+  var randomNumber = Math.floor(Math.random() * (logicalMax - min + 1)) + min;
+  for (var i = 0; i < exclusionsSorted.length; i++) {
+    if (randomNumber >= exclusionsSorted[i]) {
+      randomNumber++;
+    }
+  }
+  return randomNumber;
+}
+
+function generateData() {
+  let current_elem = {};
+  current_elem.background = 1;
+  current_elem.f_n = RandomNumber(0,4,[]);
+  current_elem.s_n = RandomNumber(0,4,[current_elem.f_n]);
+  current_elem.t_n = RandomNumber(0,4,[current_elem.f_n, current_elem.s_n]);
+  current_elem.o_n = RandomNumber(0,4,[current_elem.f_n, current_elem.s_n, current_elem.t_n]);
+  current_elem.i_n = RandomNumber(0,4,[current_elem.f_n, current_elem.s_n, current_elem.t_n, current_elem.o_n]);
+  current_elem.x_n = RandomNumber(0,9,[]);
+  current_elem.value = current_elem.f_n + '' + current_elem.s_n + '' + current_elem.t_n + '' + current_elem.o_n + '' + current_elem.i_n + '' + current_elem.x_n;
+  var failing;
+  if (testArray && testArray.length > 0) {
+    for (var i = 0; i < testArray.length; i++) {
+      if (testArray[i] && testArray[i].value == current_elem.value) {
+        failing = true;
+      }
+    }
+    if (failing) {
+      console.log('this came here', current_elem, testArray);
+      generateData();
+    }
+    else {
+      testArray.push(current_elem);
+      delete current_elem.value;
+      return current_elem;
+    }
+  }
+  else {
+    testArray.push(current_elem);
+    delete current_elem.value;
+    return current_elem;
+  }
+  // return current_elem;
+}
+
 const createDna = (_layers) => {
   let randNum = [];
+  let ownArray = [];
+  var current_elem = generateData();
+  ownArray.push('0:Background.png');
+  let props = Object.keys(current_elem);
+  for (let index = 1; index < props.length; index++) {
+    let string = current_elem[props[index]] + ':' +  current_elem[props[index]] + '#1.png';
+    ownArray.push(string);
+  }
+  // console.log(ownArray);
   _layers.forEach((layer) => {
     var totalWeight = 0;
     layer.elements.forEach((element) => {
@@ -300,8 +359,10 @@ const createDna = (_layers) => {
       }
     }
   });
-  return randNum.join(DNA_DELIMITER);
+  // console.log(randNum);
+  return ownArray.join(DNA_DELIMITER);
 };
+
 
 const writeMetaData = (_data) => {
   fs.writeFileSync(`${buildDir}/json/_metadata.json`, _data);

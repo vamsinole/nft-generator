@@ -2,20 +2,19 @@ const basePath = process.cwd();
 const { MODE } = require(`${basePath}/constants/blend_mode.js`);
 const { NETWORK } = require(`${basePath}/constants/network.js`);
 
-const network = NETWORK.eth;
+const network = NETWORK.sol;
 
 // General metadata for Ethereum
-const namePrefix = "Your Collection";
-const description = "Remember to replace this description";
+const namePrefix = "The Lotto Stars Alpha";
+const description = "We Will Turn Everyone EveryWhere Into Degens - The Gamblers";
 const baseUri = "ipfs://NewUriToReplace";
 
 const solanaMetadata = {
   symbol: "YC",
-  seller_fee_basis_points: 1000, // Define how much % you want from secondary market sales 1000 = 10%
-  external_url: "https://www.youtube.com/c/hashlipsnft",
+  seller_fee_basis_points: 0, // Define how much % you want from secondary market sales 1000 = 10%
   creators: [
     {
-      address: "7fXNuer5sbZtaTEPhtJ5g5gNtuyRoKkvxdjEjEnPN4mC",
+      address: "DzyQCG4GP6uyL6V6jQUNE5WAPrrbCk9NB4A9hxYYG4T9",
       share: 100,
     },
   ],
@@ -24,15 +23,15 @@ const solanaMetadata = {
 // If you have selected Solana then the collection starts from 0 automatically
 const layerConfigurations = [
   {
-    growEditionSizeTo: 5,
+    growEditionSizeTo: 1200,
     layersOrder: [
-      { name: "Background" },
-      { name: "Eyeball" },
-      { name: "Eye color" },
-      { name: "Iris" },
-      { name: "Shine" },
-      { name: "Bottom lid" },
-      { name: "Top lid" },
+      { name: "Theme" },
+      { name: "Star1" },
+      { name: "Star2" },
+      { name: "Star3" },
+      { name: "Star4" },
+      { name: "Star5" },
+      { name: "LottoStar" },
     ],
   },
 ];
@@ -44,7 +43,7 @@ const debugLogs = false;
 const format = {
   width: 512,
   height: 512,
-  smoothing: false,
+  smoothing: true,
 };
 
 const gif = {
@@ -73,16 +72,16 @@ const pixelFormat = {
 
 const background = {
   generate: true,
-  brightness: "80%",
+  brightness: "0%",
   static: false,
-  default: "#000000",
+  default: "#1b2047",
 };
 
 const extraMetadata = {};
 
 const rarityDelimiter = "#";
 
-const uniqueDnaTorrance = 10000;
+const uniqueDnaTorrance = 10000000;
 
 const preview = {
   thumbPerRow: 5,
